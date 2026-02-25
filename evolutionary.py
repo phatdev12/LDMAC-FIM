@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-def pop_init(population: int, max_gen: int, community: list, values: np.ndarray, community_label: list, node_attributes: dict, pageranks: dict) -> list:
+def pop_init(population: int, max_gen: int, community: dict, values: np.ndarray, community_label: list, node_attributes: dict, pageranks: dict) -> list:
   pop = []
   for _ in range(population):
     P_temp = []
@@ -11,12 +11,12 @@ def pop_init(population: int, max_gen: int, community: list, values: np.ndarray,
     for cal in values:
       u[cal] = 1
       selected_attribute[cal] = 0
-      
-    for t in range(len(community)):
+    
+    for t in list(community.keys()):
       score1 = len(community[t])
       score2 = 0
       
-      for cal in community_label:
+      for cal in community_label[t]:
         score2 += u[cal]
       community_score[t] = score1 * score2
       
@@ -39,13 +39,13 @@ def pop_init(population: int, max_gen: int, community: list, values: np.ndarray,
         selected_attribute[attribute] += len(set(node_attributes[attribute]) & set(community[tar_community]))
         u[attribute] = math.exp(-1*selected_attribute[attribute]/len(node_attributes[attribute]))
       
-    for i in range(len(community)):
-      score1 = len(community[i])
+    for t in list(community.keys()):
+      score1 = len(community[t])
       score2 = 0
       
-      for cal in community_label:
+      for cal in community_label[t]:
         score2 += u[cal]
-      community_score[i] = score1 * score2
+      community_score[t] = score1 * score2
   
   for cn in list(community_selection.keys()):
     pr = {}
